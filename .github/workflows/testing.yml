@@ -1,0 +1,23 @@
+name: Discord Webhook Testing
+
+on: [push]
+
+jobs:
+  report-status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          # https://github.com/NomicFoundation/hardhat/issues/3877
+          node-version: '18.15'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Test with Discord Webhook
+        uses: ./
+        with:
+          id: ${{ secrets.YOUR_DISCORD_WEBHOOK_ID }}
+          token: ${{ secrets.YOUR_DISCORD_WEBHOOK_TOKEN }}

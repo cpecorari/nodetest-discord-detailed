@@ -1,5 +1,5 @@
-name: 'fancier-discord-webhooks'
-description: 'This GitHub Action sends  fancy and more meaningful discord messages for your commits. It includes Test results and coverage.'
+name: 'nodetests-fancier-discord'
+description: 'This GitHub Action sends fancy and more meaningful discord messages for your commits.'
 
 inputs:
   id:
@@ -10,9 +10,5 @@ inputs:
     required: true
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'src/index.js'
-  
-branding:
-  icon: check-circle
-  color: blue
