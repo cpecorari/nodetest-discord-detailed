@@ -2,11 +2,8 @@ name: 'nodetests-fancier-discord'
 description: 'This GitHub Action sends fancy and more meaningful discord messages for your commits.'
 
 inputs:
-  id:
-    description: The Discord Webhook id
-    required: true
-  token:
-    description: The Discord Webhook token
+  webhookurl:
+    description: The Discord Webhook url
     required: true
 
 runs:

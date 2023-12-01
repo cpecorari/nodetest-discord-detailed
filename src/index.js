@@ -7,30 +7,36 @@ const webhook = require('../src/discord.js');
 async function run() {
   const payload = github.context.payload;
   console.log(`Received event payload: ${JSON.stringify(payload, undefined, 2)}`);
-  const repository = payload.repository.full_name;
+  const repository = payload.repository?.full_name;
   const commits = payload.commits;
-  const size = commits.length;
-  const branch = payload.ref.split('/')[payload.ref.split('/').length - 1];
+  const size = commits?.length;
+  const branch = payload.ref?.split('/')?.[payload?.ref?.split('/')?.length - 1];
 
-  console.log(`Received ${commits.length}/${size} commits...`);
+  console.log(`Received ${commits?.length}/${size} commits...`);
 
-  if (commits.length === 0) {
+  if (commits?.length === 0) {
     // This was likely a "--tags" push.
     console.log(`Aborting analysis, found no commits.`);
     return;
   }
 
-  const id = core.getInput('id');
-  const token = core.getInput('token');
+  const webhookurl = core.getInput('webhookurl', { required: true });
 
-  analysis.start(isSkipped(payload.head_commit)).then(
-    (report) => {
-      webhook
-        .send(id, token, repository, branch, payload.compare, commits, size, report)
-        .catch((err) => core.setFailed(err.message));
-    },
-    (err) => core.setFailed(err)
-  );
+  webhook
+    .start(webhookurl, commits, size)
+    .then((messageId) => {
+      analysis.start(isSkipped(payload.head_commit)).then(
+        (report) => {
+          console.log('REPORT : ', report);
+          webhook
+            .send(webhookurl, repository, branch, payload.compare, commits, size, report, messageId)
+            .catch((err) => core.setFailed(err.message));
+          if (report.failed > 0) core.setFailed(report.failed);
+        },
+        (err) => core.setFailed(err)
+      );
+    })
+    .catch(console.error);
 }
 
 try {
@@ -40,5 +46,5 @@ try {
 }
 
 function isSkipped(commit) {
-  return commit.message.toLowerCase().includes('[skip]');
+  return commit?.message?.toLowerCase()?.includes('[skip]');
 }
