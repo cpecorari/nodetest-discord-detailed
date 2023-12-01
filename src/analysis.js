@@ -31,10 +31,18 @@ function test(skip) {
 function aggregate(err) {
   console.log('Aggregating test results...');
   const file = fs.readFileSync(filePath, 'utf-8');
+  const arrErr = [];
+  let array1;
+  const regexErrors = /\s\d+\)\s(.+)[^:]/g;
+
+  while ((array1 = regexErrors.exec(file)) !== null) {
+    console.log(`Failed test : ${array1[1]}`);
+    arrErr.push(array1[1]);
+  }
 
   return {
     status: err.code > 0 ? 'FAILURE' : 'SUCCESS',
-    tests: err,
+    tests: arrErr.filter((e) => e[e.length - 1] !== ':'),
     passed: Number(/(\d+)\spassing/g.exec(file)?.[1] || 0),
     failed: Number(/(\d+)\sfailing/g.exec(file)?.[1] || 0),
     coverage: NaN,

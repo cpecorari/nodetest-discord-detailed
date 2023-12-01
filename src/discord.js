@@ -137,6 +137,13 @@ function appendTestResults(embed, report) {
 
   if (failed > 0) {
     tests += ` :red_circle: ${failed} Tests failed\n`;
+    for (var i in report.tests) {
+      if (i > 4) {
+        tests += `\n+ ${report.tests.length - i} more...`;
+        break;
+      }
+      tests += `${i}. \`${report.tests[i]}\`\n`;
+    }
   }
 
   embed.addFields({ name: 'Unit Tests' + (failed > 0 ? '' : `:`), value: tests });

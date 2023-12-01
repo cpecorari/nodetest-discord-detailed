@@ -1,9 +1,13 @@
 const assert = require('assert');
 
-it('should work', function () {
-  assert.ok(true);
+for (let index = 0; index < 15; index++) {
+  it('should work ' + index, function () {
+    assert.ok(true);
+  });
+}
+it('should not 1st', function () {
+  assert.ok(false);
 });
-
-it('should not', function () {
+it('should not 2nd', function () {
   assert.ok(false);
 });
