@@ -86,7 +86,7 @@ function getChangeLog(commits, size) {
     }
 
     var commit = commits[i];
-    var sha = commit.id.substring(0, 7);
+    var sha = commit.id.substring(0, 8);
     var message =
       commit.message.length > MAX_MESSAGE_LENGTH
         ? commit.message.substring(0, MAX_MESSAGE_LENGTH) + '...'
