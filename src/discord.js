@@ -34,7 +34,7 @@ module.exports.start = (webhookurl, commits, size) =>
       );
   });
 
-module.exports.send = (webhookurl, repo, branch, url, commits, size, report, previousDiscordId) =>
+module.exports.send = (webhookurl, repo, branch, url, commits, size, report, previousDiscordId, from) =>
   new Promise((resolve, reject) => {
     var client;
     console.log('Preparing Webhook...');
@@ -44,7 +44,7 @@ module.exports.send = (webhookurl, repo, branch, url, commits, size, report, pre
       reject(error.message);
       return;
     }
-    const embed = createEmbed(repo, branch, url, commits, size, report);
+    const embed = createEmbed(repo, branch, url, commits, size, report, from);
     client.editMessage(previousDiscordId, { embeds: [embed] }).then(
       (d) => {
         console.log('Successfully sent the message! ', d);
@@ -57,7 +57,7 @@ module.exports.send = (webhookurl, repo, branch, url, commits, size, report, pre
     );
   });
 
-function createEmbed(repo, branch, url, commits, size, report) {
+function createEmbed(repo, branch, url, commits, size, report, from) {
   console.log('Constructing Embed ...');
   var latest = commits?.[0];
 
@@ -66,6 +66,11 @@ function createEmbed(repo, branch, url, commits, size, report) {
     url,
     description: getChangeLog(commits, size),
     timestamp: Date.parse(latest?.timestamp || Date.now()),
+    author: {
+      name: from.author,
+      url: from.html_url,
+      icon_url: from.avatar_url,
+    },
   }).setColor(getEmbedColor(report));
 
   appendTestResults(embed, report);

@@ -11,6 +11,10 @@ async function run() {
   const commits = payload.commits;
   const size = commits?.length;
   const branch = payload.ref?.split('/')?.[payload?.ref?.split('/')?.length - 1];
+  const from =
+    payload.sender.type === 'User'
+      ? { author: payload.sender.login, url: payload.sender.html_url, avatar_url: payload.sender.avatar_url }
+      : { author: 'Bot', avatar_url: '', url: 'github.com' };
 
   console.log(`Received ${commits?.length}/${size} commits...`);
 
@@ -29,7 +33,7 @@ async function run() {
         (report) => {
           console.log('REPORT : ', report);
           webhook
-            .send(webhookurl, repository, branch, payload.compare, commits, size, report, messageId)
+            .send(webhookurl, repository, branch, payload.compare, commits, size, report, messageId, from)
             .catch((err) => core.setFailed(err.message));
           if (report.failed > 0) core.setFailed(report.failed);
         },
