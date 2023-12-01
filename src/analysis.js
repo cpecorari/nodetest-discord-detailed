@@ -35,8 +35,8 @@ function aggregate(err) {
   return {
     status: err.code > 0 ? 'FAILURE' : 'SUCCESS',
     tests: err,
-    passed: Number(/(\d)\spassing/g.exec(file)?.[1] || 0),
-    failed: Number(/(\d)\sfailing/g.exec(file)?.[1] || 0),
+    passed: Number(/(\d+)\spassing/g.exec(file)?.[1] || 0),
+    failed: Number(/(\d+)\sfailing/g.exec(file)?.[1] || 0),
     coverage: NaN,
   };
 }
