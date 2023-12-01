@@ -16,8 +16,14 @@ function test(skip) {
   var npm = child_process.spawn('npm', args, { shell: true });
   fs.writeFileSync(filePath, '');
 
-  npm.childProcess.stdout.on('data', (data) => fs.appendFileSync(filePath, data.toString('utf8')));
-  npm.childProcess.stderr.on('data', (data) => fs.appendFileSync(filePath, data.toString('utf8')));
+  npm.childProcess.stdout.on('data', (data) => {
+    fs.appendFileSync(filePath, data.toString('utf8'));
+    process.stdout.write(data.toString('utf8'));
+  });
+  npm.childProcess.stderr.on('data', (data) => {
+    fs.appendFileSync(filePath, data.toString('utf8'));
+    process.stdout.write(data.toString('utf8'));
+  });
 
   return npm.then(aggregate, aggregate);
 }
