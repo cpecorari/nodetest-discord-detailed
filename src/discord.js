@@ -139,7 +139,7 @@ function appendTestResults(embed, report) {
     tests += ` :red_circle: ${failed} Tests failed\n`;
     for (var i in report.tests) {
       if (i > 4) {
-        tests += `\n+ ${report.tests.length - i} more...`;
+        tests += `\n+ ${report.failed - i} more...`;
         break;
       }
       tests += `${i}. \`${report.tests[i]}\`\n`;
