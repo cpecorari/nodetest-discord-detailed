@@ -31,7 +31,9 @@ function test(skip) {
 function aggregate(err, fileString) {
   console.log('Aggregating test results...');
   const file = fileString ? fileString : fs.readFileSync(filePath, 'utf-8');
-  const truncated = file.split(/\d\spassing\s\(.*\n.*\d\sfailing/gm)[0];
+  const truncated = file.includes('pending')
+    ? file.split(/\d+\spassing\s\(.*\n.*\n.*\d\sfailing/gm)[0]
+    : file.split(/\d\spassing\s\(.*\n.*\d\sfailing/gm)[0];
   const arrErr = [];
   let array1;
   const regexErrors = /\s\d+\)\s(.+)[^:]/g;

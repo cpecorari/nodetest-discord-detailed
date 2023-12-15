@@ -16,6 +16,7 @@ const fileTest2 = `
 
 
   4 passing (22s)
+  3 pending
   2 failing
 
   1) Unit Tests
