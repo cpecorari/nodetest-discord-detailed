@@ -28,14 +28,15 @@ function test(skip) {
   return npm.then(aggregate, aggregate);
 }
 
-function aggregate(err) {
+function aggregate(err, fileString) {
   console.log('Aggregating test results...');
-  const file = fs.readFileSync(filePath, 'utf-8');
+  const file = fileString ? fileString : fs.readFileSync(filePath, 'utf-8');
+  const truncated = file.split(/\d\spassing\s\(.*\n.*\d\sfailing/gm)[0];
   const arrErr = [];
   let array1;
   const regexErrors = /\s\d+\)\s(.+)[^:]/g;
 
-  while ((array1 = regexErrors.exec(file)) !== null) {
+  while ((array1 = regexErrors.exec(truncated)) !== null) {
     console.log(`Failed test : ${array1[1]}`);
     arrErr.push(array1[1]);
   }
@@ -48,3 +49,5 @@ function aggregate(err) {
     coverage: NaN,
   };
 }
+
+module.exports._aggregate = aggregate;
